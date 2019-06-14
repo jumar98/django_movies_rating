@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 import datetime
+from .queryset import MovieRateQueryset
+
+from .queryset import MovieRateQueryset
 
 User = get_user_model()  # Get the default User of django
 
@@ -13,11 +16,8 @@ class Person(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    birth_date = models.DateField()
+    birth_date = models.DateField(null=True)
     type = models.CharField(max_length=1, choices=TYPE_PERSON)
-
-    class Meta:
-        abstract = True
 
     @property
     def age(self):
@@ -55,7 +55,7 @@ class Profile(models.Model):
 
 class Genre(models.Model):
 
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=30)
 
     def __str__(self):
         return "{}".format(self.name)
@@ -67,15 +67,10 @@ class Language(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
-class MovieActor(Person):
-    pass
-
-class MovieDirector(Person):
-    pass
 
 class Country(models.Model):
 
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return "{}".format(self.name)
@@ -90,21 +85,23 @@ class Movie(models.Model):
         ('D','Películas para adultos')
     ]
 
-    title = models.CharField(max_length=100)
-    duration = models.TimeField()
+    title = models.CharField(max_length=255)
+    duration = models.CharField(max_length=25, null=True)
     detail = models.TextField()
-    poster = models.ImageField(upload_to='images/')
-    classification = models.CharField(max_length=5, choices=CLASSIFICATION)
-    trailer_url = models.URLField()
-    release_date = models.DateField()
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    original_language = models.ForeignKey(Language, on_delete=models.SET(''))
-    actors = models.ManyToManyField(MovieActor)
-    directors = models.ManyToManyField(MovieDirector)
-    country = models.ForeignKey(Country, on_delete=models.SET(''))
+    poster = models.ImageField(max_length=255, upload_to='images/', null=True)
+    classification = models.CharField(max_length=50, choices=CLASSIFICATION)
+    trailer_url = models.URLField(null=True)
+    release_date = models.DateField(null=True)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, null=True)
+    original_language = models.ForeignKey(Language, on_delete=models.SET(''), null=True)
+    persons = models.ManyToManyField(Person, null=True)
+    country = models.ForeignKey(Country, on_delete=models.SET(''),null=True)
 
     def __str__(self):
         return "{}".format(self.title.capitalize())
+
+    def get_absolute_url(self):
+        return '/movies/{}'.format(self.pk)
 
 class MovieRate(models.Model):
 
@@ -117,9 +114,14 @@ class MovieRate(models.Model):
     ]
 
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     comment = models.TextField()
     rating = models.IntegerField(choices=RATINGS)
 
+    objects = MovieRateQueryset.as_manager()
+
     class Meta:
         unique_together = ("movie","user")
+
+    def __str__(self):
+        return f'{self.user.username} : {self.rate}'

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }}{% endblock%}
+{% block title_h1 %}<center>{{ title }}</center>{% endblock %}
+{% block content %}
+<div class="row container">
+    <div class="col-md-12">
+        <h4>Name</h4>
+        <p>{{object.name}}</p>
+        <h4>Birth Date</h4>
+        <p>{{object.birth_date}}</p>
+    </div>
+</div>
+{% endblock %}

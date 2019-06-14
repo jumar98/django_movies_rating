@@ -1,0 +1,16 @@
+<div class="mb-4 col-md-12">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="col-md-6">
+          <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+          <a class="navbar-brand" href="{% url 'movie-list' %}">Movies</a>
+          <a class="navbar-brand" href="">My rates</a>
+      </div>
+      <div class="col-md-6" style="display:inline-block;">
+        <form method="GET" action="{% url 'movie-list' %}" class="form-inline my-2 my-lg-0 float-right">
+        {{ form.search }}
+        <button class="btn btn-outline-light my-2 my-sm-0 float-right" type="submit">Search</button>
+        <a class="btn btn-outline-light my-2 my-sm-0 float-right ml-2" href="{% url 'logout' %}">Logout</a>
+        </form>
+      </div>
+    </nav>
+</div>

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }}{% endblock%}
+{% block title_h1 %}<center>{{ title }}</center>{% endblock %}
+{% block content %}
+    <div class="offset-md-4 col-md-12">
+    <form method="POST" action="{% url 'api_movie' %}" class="form-inline">
+        {% csrf_token %}
+        {{ form.search }}
+        <button class="btn btn-primary my-2 btn-lg ml-2 float-right" type="submit">Search</button>
+    </form>
+    <pre>
+        {{ json }}
+    </pre>
+    </div>
+{% endblock %}

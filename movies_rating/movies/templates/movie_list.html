@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }}{% endblock%}
+{% block title_h1 %}<center>{{ title }}</center>{% endblock %}
+{% block content %}
+<div class="row">
+<div class="container">
+    {% include 'navbar/navbar_search.html' %}
+</div>
+{% if movies %}
+{% for movie in movies %}
+    <div class="card col-md-3 mr-4 ml-5 card mb-3" style="width: 18rem;">
+        <a href="{{ movie.get_absolute_url }}">
+            <img height="250px" class="card-img-top" src="{{movie.poster.url}}" alt="Card image cap">
+        </a>
+        <div class="card-body">
+        <div class="mb-2"  style="height:50px;">
+            <h5><strong>{{movie.title}}</strong></h5>
+        </div>
+        <div class="mt-2">
+            {% for rate in rates %}
+            {% if rate.movie == movie.id %}
+                <center>
+                    <h4><a class="btn btn-primary btn-lg" href="{% url 'movie-rating' movie.id %}">{{ rate.rating }}</a></h4>
+                </center>
+            {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% else %}
+    <div class="col-md-8 offset-md-2">
+        {% for message in messages %}
+        <center>
+        <div class="alert alert-danger" role="alert">
+          <h1 class="alert-heading">I'm sorry!</h1>
+          <hr>
+          <h3>{{ message }}</h3>
+        </div>
+        {% endfor %}
+        </center>
+    </div>
+{% endif %}
+{% endblock %}

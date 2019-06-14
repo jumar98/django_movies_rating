@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }}{% endblock%}
+{% block title_h1 %}<center>{{ object.title }}</center>{% endblock %}
+{% block content %}
+<div class="row container">
+    <div class="col-md-6">
+        <a href="{{object.trailer_url}}"><img height="450px" width="450px" src="{{object.poster.url}}" alt=""></a>
+    </div>
+    <div class="col-md-3">
+        <h4>Sinopsis</h4>
+        <p>{{object.detail}}</p>
+        <h4>Genre</h4>
+        <p>{{object.genre}}</p>
+        <h4>Duration</h4>
+        <p>{{object.duration}} min</p>
+        <h4>Classification</h4>
+        <p>{{object.classification}}</p>
+        <h4>Director</h4>
+        {% for a in object.persons.all %}
+        {% if a.type == "D" %}
+        <p>{{a.name}}</p>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="col-md-3">
+        <h4>Release date</h4>
+        <p>{{object.release_date}}</p>
+        <h4>Original language</h4>
+        <p>{{object.original_language}}</p>
+        <h4>Country</h4>
+        <p>{{object.country}}</p>
+        <h4>Actors</h4>
+        {% for a in object.persons.all %}
+        {% if a.type == "A" %}
+        <p>{{a.name}}</p>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
