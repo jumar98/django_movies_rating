@@ -23,7 +23,8 @@ if settings.DEBUG:
     urlpatterns = [
         path('admin/', admin.site.urls),
         path('__debug__/', include(debug_toolbar.urls)),
-        path('', include('movies.urls'))
+        path('', include('movies.urls')),
+        path(f'api/{settings.API_VERSION}/', include(('movies.api.urls', 'movies.api'), namespace='api-movie')),
     ]
 
 if settings.DEBUG: # new

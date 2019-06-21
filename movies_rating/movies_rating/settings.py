@@ -25,7 +25,7 @@ SECRET_KEY = '1wk)x#fnasn@@0^_men%!nb_829(8(h1##&_ud72z8kyc0z96+'
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'movies',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'movies.api',
+    'django_filters'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -53,10 +57,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'movies.middleware.AuthMiddleware'
 ]
-
-ROOT_URLCONF = 'movies_rating.urls'
 
 TEMPLATES = [
     {
@@ -74,9 +77,22 @@ TEMPLATES = [
     },
 ]
 
+API_VERSION = 'v1' \
+              ''
 WSGI_APPLICATION = 'movies_rating.wsgi.application'
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 try:

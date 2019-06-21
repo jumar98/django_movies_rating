@@ -3,7 +3,10 @@
 {% block title %}{{ title }}{% endblock%}
 {% block title_h1 %}<center>{{ object.title }}</center>{% endblock %}
 {% block content %}
-<div class="row container">
+<div>
+    {% include 'navbar/navbar_search.html' with page='movie_detail' %}
+</div>
+<div class="row container" style="padding: 0 30px">
     <div class="col-md-6">
         <a href="{{object.trailer_url}}"><img height="450px" width="450px" src="{{object.poster.url}}" alt=""></a>
     </div>

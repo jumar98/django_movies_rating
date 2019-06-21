@@ -27,6 +27,7 @@ class Person(models.Model):
     def __str__(self):
         return "{}".format(self.name)
 
+
 class Profile(models.Model):
 
     CHOICE_TYPE = [
@@ -52,6 +53,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return "{}".format(self.user)
+
+
+class Token(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    token = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "{} : {}".format(self.user.username, self.token)
+
 
 class Genre(models.Model):
 
@@ -89,12 +100,12 @@ class Movie(models.Model):
     duration = models.CharField(max_length=25, null=True)
     detail = models.TextField()
     poster = models.ImageField(max_length=255, upload_to='images/', null=True)
-    classification = models.CharField(max_length=50, choices=CLASSIFICATION)
+    classification = models.CharField(max_length=50, choices=CLASSIFICATION, null=True)
     trailer_url = models.URLField(null=True)
     release_date = models.DateField(null=True)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE, null=True)
     original_language = models.ForeignKey(Language, on_delete=models.SET(''), null=True)
-    persons = models.ManyToManyField(Person, null=True)
+    persons = models.ManyToManyField(Person)
     country = models.ForeignKey(Country, on_delete=models.SET(''),null=True)
 
     def __str__(self):
@@ -120,8 +131,5 @@ class MovieRate(models.Model):
 
     objects = MovieRateQueryset.as_manager()
 
-    class Meta:
-        unique_together = ("movie","user")
-
     def __str__(self):
-        return f'{self.user.username} : {self.rate}'
+        return f'{self.user.username} : {self.rating}'

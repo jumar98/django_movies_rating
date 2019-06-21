@@ -14,18 +14,20 @@
             <img height="250px" class="card-img-top" src="{{movie.poster.url}}" alt="Card image cap">
         </a>
         <div class="card-body">
-        <div class="mb-2"  style="height:50px;">
             <h5><strong>{{movie.title}}</strong></h5>
-        </div>
-        <div class="mt-2">
-            {% for rate in rates %}
-            {% if rate.movie == movie.id %}
-                <center>
-                    <h4><a class="btn btn-primary btn-lg" href="{% url 'movie-rating' movie.id %}">{{ rate.rating }}</a></h4>
-                </center>
-            {% endif %}
-            {% endfor %}
-        </div>
+        <hr>
+        {% if movie.id not in movie_id %}
+            <center>
+                <h4><a class="btn btn-primary btn-lg" href="{% url 'movie-rating' movie.id %}">Rate</a></h4>
+            </center>
+        {% endif %}
+        {% for rate in rates %}
+        {% if rate.movie == movie.id %}
+            <center>
+                <h4><a class="btn btn-primary btn-lg" href="{% url 'movie-rating' movie.id %}">{{ rate.rating|floatformat:2 }}</a></h4>
+            </center>
+        {% endif %}
+        {% endfor %}
         </div>
     </div>
 {% endfor %}

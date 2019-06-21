@@ -2,6 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
 from .models import Person, Movie, MovieRate, Profile
+from django.core.exceptions import ValidationError
 
 class PersonForm(forms.ModelForm):
     birth_date = forms.DateField(
@@ -50,11 +51,45 @@ class MovieForm(forms.ModelForm):
 
 class MovieRateForm(forms.ModelForm):
 
-    movie = forms.ChoiceField(widget=forms.TextInput(attrs={'disabled':'disabled'}))
 
     class Meta:
         model = MovieRate
-        fields = '__all__'
+        fields = ('comment', 'rating',)
+
+    def __init__(self, user, movie, *args, **kwargs):
+        self.user = user
+        self.movie = movie
+        super(MovieRateForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        data = super(MovieRateForm, self).clean()
+        if MovieRate.objects.filter(user=self.user, movie=self.movie).exists():
+            raise ValidationError(f'Movie rate with user {self.user.username} and movie {self.movie.title} already exists')
+        return data
+
+    def save(self, commit=True):
+        instance = super(MovieRateForm, self).save(commit=False)
+        instance.user = self.user
+        instance.movie = self.movie
+        instance.save()
+        return instance
+
+
+class MovieRateUpdateForm(MovieRateForm):
+
+    class Meta:
+        model = MovieRate
+        fields = ('comment', 'rating',)
+
+    def __init__(self, user, movie, *args, **kwargs):
+        super(MovieRateUpdateForm, self).__init__(user=user, movie=movie, *args, **kwargs)
+
+    def clean(self):
+        pass
+
+    def save(self, commit=True):
+        return super(MovieRateUpdateForm, self).save(commit=False)
+
 
 
 class SearchForm(forms.Form):

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }}{% endblock%}
+{% block title_h1 %}<center>{{ title }}</center>{% endblock %}
+{% block content %}
+<div>
+    {% include 'navbar/navbar_search.html' with page='my_rates'%}
+</div>
+<div class="col-md-8 offset-md-2">
+    {% for message in messages %}
+    <center>
+    <div class="alert alert-success" role="alert">
+      <h1 class="alert-heading">Successful!</h1>
+      <hr>
+      <h3>{{ message }}</h3>
+    </div>
+    {% endfor %}
+    </center>
+</div>
+<div class="row container">
+{% if movies_rate %}
+{% for movie_rate in movies_rate %}
+    <div class="col-md-3 mr-4 ml-5 card mb-3" style="width: 18rem;">
+        <a href="{{ movie_rate.movie.get_absolute_url }}">
+            <img height="250px" class="card-img-top" src="{{movie_rate.movie.poster.url}}" alt="Card image cap">
+        </a>
+        <div class="card-body">
+        <div class="mb-2"  style="height:50px;">
+            <h5><strong>{{movie_rate.movie.title}}</strong></h5>
+        </div>
+        <div class="mt-2 row">
+        <div class="col-md-3">
+            <h4><a class="btn btn-primary disabled" href="">{{ movie_rate.rating|floatformat:1 }}</a></h4>
+        </div>
+        <div class="col-md-3 mr-4">
+            <h4><a class="btn btn-success" href="{% url 'rate-update' movie_rate.id %}">Update</a></h4>
+        </div>
+        <div class="col-md-3 ml-2">
+            <h4><a class="btn btn-danger" href="{% url 'delete-rate' movie_rate.id %}">Delete</a></h4>
+        </div>
+        </div>
+        <p class="card-text">
+            <strong>Comment:</strong>
+            {{ movie_rate.comment }}
+        </p>
+        </div>
+    </div>
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}
