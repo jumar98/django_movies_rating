@@ -6,6 +6,7 @@
           {% endif %}
           <a class="navbar-brand" href="{% url 'movie-list' %}">Movies</a>
           <a class="navbar-brand" href="{% url 'my-rates' %}">My rates</a>
+          <a class="navbar-brand" href="{% url 'download-movie' %}">Download movie</a>
       </div>
       <div class="col-md-6" style="display:inline-block;">
         {% if page != "movie_detail" and page != "my_rates" %}

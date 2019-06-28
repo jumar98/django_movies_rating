@@ -22,7 +22,14 @@ class PersonForm(forms.ModelForm):
 
 
 class QueryMovieForm(forms.Form):
-    search = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg', 'placeholder': 'Search movie'}))
+    choices = (
+        (0, 'All'),
+        (1, 'One'),
+    )
+    search_type = forms.CharField(widget=forms.Select(attrs={'class':'form-control mr-sm-2'}, choices=choices))
+    search = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg', 'placeholder':
+                                                                                                    'Search movie'}))
+
 
 class ProfileForm(forms.ModelForm):
     birth_date = forms.DateField(
@@ -48,6 +55,7 @@ class MovieForm(forms.ModelForm):
     class Meta:
         model = Movie
         fields = '__all__'
+
 
 class MovieRateForm(forms.ModelForm):
 
@@ -91,7 +99,5 @@ class MovieRateUpdateForm(MovieRateForm):
         return super(MovieRateUpdateForm, self).save(commit=False)
 
 
-
 class SearchForm(forms.Form):
-
     search = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control mr-sm-2', 'placeholder':'Search movie'}))

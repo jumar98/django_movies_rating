@@ -10,12 +10,12 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, \
 from .models import Movie, MovieRate, Person, Profile
 from .forms import PersonForm, MovieForm, MovieRateForm, SearchForm, ProfileForm, QueryMovieForm, MovieRateUpdateForm
 from django.contrib.auth import get_user_model
-from django.core import management
 from rest_framework.renderers import JSONRenderer
 from .serializers import MovieSerializer, MovieRateSerializer
 from rest_framework_xml.renderers import XMLRenderer
-from secrets import token_hex
+from .tasks import download_movie, send_email
 from rest_framework.authtoken.models import Token
+from celery import chain, group, chord
 
 User = get_user_model()
 
@@ -105,14 +105,17 @@ class ApiMovieDetail(DetailView):
         return self.response_class(context['response'], **response_kwargs)
 
 
-class QueryMoviesApiView(FormView):
-    template_name = 'query_movies.html'
+class DownloadMovieView(FormView):
+    template_name = 'download_movie.html'
     form_class = QueryMovieForm
     success_url = reverse_lazy('movie-list')
     extra_context = {'title':"Movies Search"}
 
     def form_valid(self, form):
-        management.call_command("download", '-s', self.request.POST['search'])
+        signatures = []
+        for movie in self.request.POST['search'].split(','):
+            signatures.append(download_movie.s(self.request.POST['search_type'], movie))
+        chord(group(*signatures))(send_email.s())
         return super().form_valid(form)
 
 

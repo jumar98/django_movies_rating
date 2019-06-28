@@ -3,14 +3,14 @@ from django.urls import path
 
 from movies.views import ListCreateMovieApi, MethodWithPK
 from .views import HomeView, CharacterView, MovieView, MovieRateView, MovieListView, MovieDetailView, \
-    CharacterDetailView, SignUpUserView, LogOutMovie, QueryMoviesApiView, ApiMovieList, ApiMovieDetail, ApiMovieListXML, \
+    CharacterDetailView, SignUpUserView, LogOutMovie, DownloadMovieView, ApiMovieList, ApiMovieDetail, ApiMovieListXML, \
     MyRate, MovieRateApi, UpdateRateView, DeleteRateView
 """ListCreateMovieApi, MethodWithPK"""
 
 
 urlpatterns = [
     path('', HomeView.as_view(), name="home"),
-    path('api/movie/', QueryMoviesApiView.as_view(), name="api_movie"),
+    path('download/', DownloadMovieView.as_view(), name="download-movie"),
     path('rates/', MyRate.as_view(), name="my-rates"),
     path('movie_list/api/', ApiMovieList.as_view(), name="movie_api"),
     path('movie/xml/', ApiMovieListXML.as_view(), name="xml"),
@@ -25,8 +25,8 @@ urlpatterns = [
     path('movies/rating/<int:pk>', MovieRateView.as_view(), name="movie-rating"),
     path('characters/<int:pk>', CharacterDetailView.as_view(), name='character-detail'),
     path('movie_rates/<int:pk>', MovieRateApi.as_view(), name='movie_rates'),
-    path('movie/', ListCreateMovieApi.as_view(), name='movie_list'),
-    path('movie/<int:pk>', MethodWithPK.as_view(), name='movie'),
+    path('movies/', ListCreateMovieApi.as_view(), name='movie_list'),
+    path('movies/<int:pk>', MethodWithPK.as_view(), name='movie'),
     path('rate/<int:pk>/delete', DeleteRateView.as_view(), name='delete-rate')
 
 ]

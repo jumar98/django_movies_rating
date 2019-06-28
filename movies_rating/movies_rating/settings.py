@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'movies',
+    'django_celery_results',
     'rest_framework',
     'rest_framework.authtoken',
     'movies.api',
-    'django_filters'
+    'django_filters',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -60,6 +61,9 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'movies.middleware.AuthMiddleware'
 ]
+
+
+ROOT_URLCONF = 'movies_rating.urls'
 
 TEMPLATES = [
     {

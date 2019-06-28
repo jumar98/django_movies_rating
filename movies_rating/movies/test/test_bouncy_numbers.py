@@ -28,4 +28,3 @@ class BouncyTestCase(TestCase):
     def test_minimun_number_bouncy_to_proportion_90_percent():
         assert bouncy.minimun_number(538,0.5,0.90) == 21780
 
-
