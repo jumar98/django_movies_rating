@@ -4,6 +4,7 @@ from django import forms
 from .models import Person, Movie, MovieRate, Profile
 from django.core.exceptions import ValidationError
 
+
 class PersonForm(forms.ModelForm):
     birth_date = forms.DateField(
         widget=forms.TextInput(

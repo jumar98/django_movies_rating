@@ -1,5 +1,6 @@
 import os
 from celery import Celery
+from celery.schedules import crontab
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movies_rating.settings')
@@ -14,6 +15,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
+
+app.conf.beat_schedule = {
+    'download-movie-each-five-minutes': {
+        'task': 'movies.tasks.schedule_task',
+        'schedule': crontab(minute='*/2'),
+        'args': ()
+    },
+}
 
 
 @app.task(bind=True)

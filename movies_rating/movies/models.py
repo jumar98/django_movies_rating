@@ -114,6 +114,7 @@ class Movie(models.Model):
     def get_absolute_url(self):
         return '/movies/{}'.format(self.pk)
 
+
 class MovieRate(models.Model):
 
     RATINGS = [
@@ -133,3 +134,11 @@ class MovieRate(models.Model):
 
     def __str__(self):
         return f'{self.user.username} : {self.rating}'
+
+
+class Suggest(models.Model):
+    type = models.CharField(max_length=5, null=True)
+    name = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return f'{self.movies}'

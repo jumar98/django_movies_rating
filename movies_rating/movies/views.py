@@ -7,6 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, FormView, UpdateView, DeleteView
 from rest_framework.generics import ListAPIView, ListCreateAPIView, \
     RetrieveUpdateDestroyAPIView
+
+from movies.models import Suggest
 from .models import Movie, MovieRate, Person, Profile
 from .forms import PersonForm, MovieForm, MovieRateForm, SearchForm, ProfileForm, QueryMovieForm, MovieRateUpdateForm
 from django.contrib.auth import get_user_model
@@ -112,10 +114,8 @@ class DownloadMovieView(FormView):
     extra_context = {'title':"Movies Search"}
 
     def form_valid(self, form):
-        signatures = []
         for movie in self.request.POST['search'].split(','):
-            signatures.append(download_movie.s(self.request.POST['search_type'], movie))
-        chord(group(*signatures))(send_email.s())
+            Suggest.objects.create(name=movie, type=self.request.POST['search_type'])
         return super().form_valid(form)
 
 
